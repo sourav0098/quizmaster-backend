@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import com.quizmaster.entities.services.UserService;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin("*")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -38,16 +40,16 @@ public class UserController {
 
 	// Create new user
 	@PostMapping
-	public ResponseEntity<CreateUserDto> createUser(@Valid @RequestBody CreateUserDto userDto) {
-		CreateUserDto user = this.userService.createUser(userDto);
+	public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody CreateUserDto userDto) {
+		UserResponseDto user = this.userService.createUser(userDto);
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
 
 	// Update user
 	@PutMapping("/{userId}")
-	public ResponseEntity<CreateUserDto> updateUser(@PathVariable("userId") String userId,
+	public ResponseEntity<UserResponseDto> updateUser(@PathVariable("userId") String userId,
 			@Valid @RequestBody CreateUserDto userDto) {
-		CreateUserDto user = this.userService.updateUser(userDto, userId);
+		UserResponseDto user = this.userService.updateUser(userDto, userId);
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 }

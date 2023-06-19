@@ -11,8 +11,8 @@ public interface UserService {
 	UserResponseDto getUserByEmail(String email);
 
 	// Create a new user
-	CreateUserDto createUser(CreateUserDto userDto);
+	UserResponseDto createUser(CreateUserDto userDto);
 
 	// Update a user
-	CreateUserDto updateUser(CreateUserDto userDto, String userId);
+	UserResponseDto updateUser(CreateUserDto userDto, String userId);
 }

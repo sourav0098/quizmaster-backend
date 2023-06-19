@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.quizmaster.dtos.CreateUserDto;
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Override
 	public UserResponseDto getUserById(String userId) {
 		User user = this.userRepository.findById(userId)
@@ -47,7 +51,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public CreateUserDto createUser(CreateUserDto userDto) {
+	public UserResponseDto createUser(CreateUserDto userDto) {
 		// Check if some other user is registered with that email
 		User emailExists = this.userRepository.findUserByEmailIgnoreCase(userDto.getEmail());
 		if (emailExists != null) {
@@ -58,7 +62,8 @@ public class UserServiceImpl implements UserService {
 		String userId = UUID.randomUUID().toString();
 		userDto.setUserId(userId);
 
-		// NEED TO ENCODE PASSWORD
+		// Encoding password
+		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
 		// Convert DTO to entity
 		User user = modelMapper.map(userDto, User.class);
@@ -70,11 +75,11 @@ public class UserServiceImpl implements UserService {
 		User savedUser = this.userRepository.save(user);
 
 		// Convert entity to DTO
-		return modelMapper.map(savedUser, CreateUserDto.class);
+		return modelMapper.map(savedUser, UserResponseDto.class);
 	}
 
 	@Override
-	public CreateUserDto updateUser(CreateUserDto userDto, String userId) {
+	public UserResponseDto updateUser(CreateUserDto userDto, String userId) {
 		// we will not update email and image through this method
 		User user = this.userRepository.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
@@ -87,12 +92,12 @@ public class UserServiceImpl implements UserService {
 		// NEED TO ENCODE PASSWORD
 		if (userDto.getPassword() != null) {
 			if (!userDto.getPassword().equalsIgnoreCase(user.getPassword())) {
-				user.setPassword((userDto.getPassword()));
+				user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 			}
 		}
 
 		User savedUser = this.userRepository.save(user);
 
-		return modelMapper.map(savedUser, CreateUserDto.class);
+		return modelMapper.map(savedUser, UserResponseDto.class);
 	}
 }
