@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +15,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CreateUserDto {
 	private String userId;
 
@@ -36,7 +34,7 @@ public class CreateUserDto {
 	@Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\\s).{8,15}$", message = "Password should contain atleast one uppercase, one lowercase, one number and one special character")
 	private String password;
 
-	private boolean enabled;
+	private boolean enabled = true;
 	private Date createdAt;
 	private Date updatedAt;
 }

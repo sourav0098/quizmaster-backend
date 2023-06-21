@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quizmaster.dtos.CreateUserDto;
+import com.quizmaster.dtos.UpdateUserDto;
 import com.quizmaster.dtos.UserResponseDto;
 import com.quizmaster.entities.services.UserService;
 
@@ -48,7 +49,7 @@ public class UserController {
 	// Update user
 	@PutMapping("/{userId}")
 	public ResponseEntity<UserResponseDto> updateUser(@PathVariable("userId") String userId,
-			@Valid @RequestBody CreateUserDto userDto) {
+			@Valid @RequestBody UpdateUserDto userDto) {
 		UserResponseDto user = this.userService.updateUser(userDto, userId);
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}

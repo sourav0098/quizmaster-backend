@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.quizmaster.dtos.CreateUserDto;
+import com.quizmaster.dtos.UpdateUserDto;
 import com.quizmaster.dtos.UserResponseDto;
 import com.quizmaster.entities.Role;
 import com.quizmaster.entities.User;
@@ -79,22 +80,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserResponseDto updateUser(CreateUserDto userDto, String userId) {
+	public UserResponseDto updateUser(UpdateUserDto userDto, String userId) {
 		// we will not update email and image through this method
 		User user = this.userRepository.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 		user.setFname(userDto.getFname());
 		user.setLname(userDto.getLname());
-
-		// update and encrypt password only when it is not null or it is different from
-		// previous password
-
-		// NEED TO ENCODE PASSWORD
-		if (userDto.getPassword() != null) {
-			if (!userDto.getPassword().equalsIgnoreCase(user.getPassword())) {
-				user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-			}
-		}
 
 		User savedUser = this.userRepository.save(user);
 

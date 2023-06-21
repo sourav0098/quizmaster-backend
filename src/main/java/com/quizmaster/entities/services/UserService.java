@@ -1,6 +1,7 @@
 package com.quizmaster.entities.services;
 
 import com.quizmaster.dtos.CreateUserDto;
+import com.quizmaster.dtos.UpdateUserDto;
 import com.quizmaster.dtos.UserResponseDto;
 
 public interface UserService {
@@ -14,5 +15,5 @@ public interface UserService {
 	UserResponseDto createUser(CreateUserDto userDto);
 
 	// Update a user
-	UserResponseDto updateUser(CreateUserDto userDto, String userId);
+	UserResponseDto updateUser(UpdateUserDto userDto, String userId);
 }
