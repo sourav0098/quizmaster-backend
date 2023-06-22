@@ -1,33 +1,43 @@
-package com.quizmaster.entities;
+package com.quizmaster.dtos;
 
 import java.util.Date;
+
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import com.quizmaster.entities.Quiz;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "questions")
-public class Question {
-
+public class QuestionDto {
 	private String questionId;
+
+	@NotBlank(message = "Please provide a valid question")
 	private String question;
 	private String image;
+
+	@NotBlank(message = "Please provide a valid option 1")
 	private String option1;
+
+	@NotBlank(message = "Please provide a valid option 2")
 	private String option2;
+
+	@NotBlank(message = "Please provide a valid option 3")
 	private String option3;
+
+	@NotBlank(message = "Please provide a valid option 4")
 	private String option4;
+
+	@NotBlank(message = "Please provide a valid answer")
 	private String answer;
 
 	@CreationTimestamp
@@ -40,5 +50,4 @@ public class Question {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Quiz quiz;
-
 }
