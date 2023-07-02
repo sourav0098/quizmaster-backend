@@ -1,18 +1,24 @@
 package com.quizmaster.entities.services;
 
+import com.quizmaster.dtos.CreateQuestionDto;
 import com.quizmaster.dtos.PageableResponse;
 import com.quizmaster.dtos.QuestionDto;
-import com.quizmaster.entities.Quiz;
+import com.quizmaster.dtos.QuestionsWithoutAnswerDto;
 
 public interface QuestionService {
 
 	public QuestionDto getQuestionById(String questionId);
 
-	public QuestionDto addQuestion(QuestionDto questionDto);
+	public QuestionDto addQuestion(CreateQuestionDto questionDto);
 
 	public QuestionDto updateQuestion(QuestionDto questionDto, String questionId);
 
-	public PageableResponse<QuestionDto> getQuestionByQuiz(Quiz quiz, int pageNumber, int pageSize, String sortBy,
-			String sortDir);
+	public void deleteQuestion(String questionId);
+
+	public PageableResponse<QuestionDto> getQuestionByQuiz(String quizId, int numberOfQuestions, int pageNumber,
+			int pageSize);
+	
+	public PageableResponse<QuestionsWithoutAnswerDto> getQuestionByQuizForUser(String quizId, int numberOfQuestions, int pageNumber,
+			int pageSize);
 
 }

@@ -46,10 +46,9 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeHttpRequests().antMatchers("/auth/login").permitAll()
-				.antMatchers(HttpMethod.POST, "/users").permitAll().antMatchers(HttpMethod.GET).permitAll().and()
-				.exceptionHandling().authenticationEntryPoint(autenticationEntryPoint).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.csrf().disable().authorizeHttpRequests().antMatchers("/auth/login").permitAll().antMatchers(HttpMethod.GET)
+				.permitAll().and().exceptionHandling().authenticationEntryPoint(autenticationEntryPoint).and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();

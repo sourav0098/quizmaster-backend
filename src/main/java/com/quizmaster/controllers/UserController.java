@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ public class UserController {
 
 	//	Get a user by user id
 	@GetMapping("/{userId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<UserResponseDto> getUserById(@PathVariable String userId) {
 		// Return the user in a ResponseEntity with HttpStatus.OK
 		return new ResponseEntity<UserResponseDto>(this.userService.getUserById(userId), HttpStatus.OK);
@@ -35,6 +37,7 @@ public class UserController {
 
 	//	Get a user by email
 	@GetMapping("/email/{email}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<UserResponseDto> getUserByEmail(@PathVariable String email) {
 		return new ResponseEntity<UserResponseDto>(this.userService.getUserByEmail(email), HttpStatus.OK);
 	}
@@ -48,6 +51,7 @@ public class UserController {
 
 	// Update user
 	@PutMapping("/{userId}")
+	@PreAuthorize("hasRole('NORMAL')")
 	public ResponseEntity<UserResponseDto> updateUser(@PathVariable("userId") String userId,
 			@Valid @RequestBody UpdateUserDto userDto) {
 		UserResponseDto user = this.userService.updateUser(userDto, userId);
