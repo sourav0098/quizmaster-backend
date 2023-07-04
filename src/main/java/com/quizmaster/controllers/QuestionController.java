@@ -58,8 +58,8 @@ public class QuestionController {
 	}
 
 	@GetMapping("quiz/{quizId}/user-attempt")
-	@PreAuthorize("hasRole('NORMAL')")
-	public ResponseEntity<PageableResponse<QuestionsWithoutAnswerDto>> getQuestionsByQuizWithoutAnswer(
+	@PreAuthorize("hasRole('NORMAL') or hasRole('ADMIN')")
+	public ResponseEntity<PageableResponse<QuestionsWithoutAnswerDto>> getQuestionsByQuizForUser(
 			@PathVariable String quizId,
 			@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
 			@RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
@@ -72,7 +72,7 @@ public class QuestionController {
 	}
 
 	@PostMapping("eval-quiz")
-	@PreAuthorize("hasRole('NORMAL')")
+	@PreAuthorize("hasRole('NORMAL') or hasRole('ADMIN')")
 	public ResponseEntity<?> evaluateQuiz(@RequestBody List<QuestionResponseDto> questions) {
 
 		Integer correctAnswers = 0;

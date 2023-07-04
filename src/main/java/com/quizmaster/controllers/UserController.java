@@ -27,7 +27,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	//	Get a user by user id
+	// Get a user by user id
 	@GetMapping("/{userId}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<UserResponseDto> getUserById(@PathVariable String userId) {
@@ -35,7 +35,7 @@ public class UserController {
 		return new ResponseEntity<UserResponseDto>(this.userService.getUserById(userId), HttpStatus.OK);
 	}
 
-	//	Get a user by email
+	// Get a user by email
 	@GetMapping("/email/{email}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<UserResponseDto> getUserByEmail(@PathVariable String email) {
@@ -51,7 +51,7 @@ public class UserController {
 
 	// Update user
 	@PutMapping("/{userId}")
-	@PreAuthorize("hasRole('NORMAL')")
+	@PreAuthorize("hasRole('NORMAL') or hasRole('ADMIN')")
 	public ResponseEntity<UserResponseDto> updateUser(@PathVariable("userId") String userId,
 			@Valid @RequestBody UpdateUserDto userDto) {
 		UserResponseDto user = this.userService.updateUser(userDto, userId);

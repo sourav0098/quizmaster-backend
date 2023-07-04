@@ -117,48 +117,55 @@ public class QuestionServiceImpl implements QuestionService {
 		return response;
 	}
 
+
 	@Override
 	public PageableResponse<QuestionsWithoutAnswerDto> getQuestionByQuizForUser(String quizId, int numberOfQuestions,
-			int pageNumber, int pageSize) {
+	        int pageNumber, int pageSize) {
 
-		// Check if there are enough questions in the database
-		long totalQuestions = this.questionRepository.countByQuizQuizId(quizId);
-		if (totalQuestions == 0) {
-			throw new ResourceNotFoundException("No questions found for the quiz");
-		}
+	    // Check if there are enough questions in the database
+	    long totalQuestions = this.questionRepository.countByQuizQuizId(quizId);
+	    if (totalQuestions == 0) {
+	        throw new ResourceNotFoundException("No questions found for the quiz");
+	    }
 
-		// Adjust the page size if the number of available questions is less than the
-		// requested page size
-		pageSize = Math.min(pageSize, (int) totalQuestions);
+	    // Adjust the page size if the number of available questions is less than the
+	    // requested page size
+	    pageSize = Math.min(pageSize, (int) totalQuestions);
 
-		// Calculate the maximum number of pages needed to retrieve the total
-		// numberOfQuestions
-		int maxPages = (int) Math.ceil((double) totalQuestions / pageSize);
+	    // Calculate the maximum number of pages needed to retrieve the total
+	    // numberOfQuestions
+	    int maxPages = (int) Math.ceil((double) totalQuestions / pageSize);
 
-		// Adjust the pageNumber to ensure it doesn't exceed the maximum number of pages
-		// as the page number starts from 0
-		int adjustedPageNumber = Math.min(pageNumber, maxPages - 1);
+	    // Adjust the pageNumber to ensure it doesn't exceed the maximum number of pages
+	    // as the page number starts from 0
+	    int adjustedPageNumber = Math.min(pageNumber, maxPages - 1);
 
-		Pageable pageable = PageRequest.of(adjustedPageNumber, pageSize);
+	    Pageable pageable = PageRequest.of(adjustedPageNumber, pageSize);
 
-		// Retrieve all questions for the quiz
-		List<Question> allQuestions = this.questionRepository.findByQuizQuizId(quizId);
+	    // Retrieve all questions for the quiz
+	    List<Question> allQuestions = this.questionRepository.findByQuizQuizId(quizId);
 
-		// Randomly shuffle the questions
-		Collections.shuffle(allQuestions);
+	    // Randomly shuffle the questions
+	    Collections.shuffle(allQuestions);
 
-		// Get the subset of questions for the current page
-		int startIndex = adjustedPageNumber * pageSize;
-		int endIndex = Math.min(startIndex + pageSize, allQuestions.size());
-		List<Question> pageQuestions = allQuestions.subList(startIndex, endIndex);
+	    // Get the subset of questions for the current page
+	    int startIndex = adjustedPageNumber * pageSize;
+	    int endIndex = Math.min(startIndex + pageSize, allQuestions.size());
+	    List<Question> pageQuestions = allQuestions.subList(startIndex, endIndex);
 
-		// Convert the list of questions to a pageable format
-		Page<Question> page = new PageImpl<>(pageQuestions, pageable, totalQuestions);
+	    // Check if the number of questions exceeds the maximum allowed
+	    if (pageQuestions.size() > numberOfQuestions) {
+	        pageQuestions = pageQuestions.subList(0, numberOfQuestions);
+	    }
 
-		PageableResponse<QuestionsWithoutAnswerDto> response = Helper.getPageableResponse(page,
-				QuestionsWithoutAnswerDto.class);
-		return response;
+	    // Convert the list of questions to a pageable format
+	    Page<Question> page = new PageImpl<>(pageQuestions, pageable, totalQuestions);
+
+	    PageableResponse<QuestionsWithoutAnswerDto> response = Helper.getPageableResponse(page,
+	            QuestionsWithoutAnswerDto.class);
+	    return response;
 	}
+
 
 	@Override
 	public void deleteQuestion(String questionId) {
